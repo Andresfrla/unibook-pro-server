@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const ServiceModel = new Schema (
+const serviceSchema = new Schema (
     {
        image: {
         type: String,
