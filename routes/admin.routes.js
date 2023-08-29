@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // Require the User model in order to interact with the database
-const User = require("../models/User.model");
+const Admin = require("../models/Admin.model");
 
 // Require necessary (isAuthenticated) middleware in order to control access to specific routes
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
@@ -18,11 +18,11 @@ const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-  const { name, lastName, email, password, dateOfBirth } = req.body;
+  const { email, name, password, } = req.body;
 
   // Check if email or password or name are provided as empty strings
-  if (name === "" || lastName === "" || email === "" || password === "" || dateOfBirth === "") {
-    res.status(400).json({ message: "Provide name, last name, password, and your date of birth" });
+  if (email === "" || name === "" || password === "" ) {
+    res.status(400).json({ message: "Provide name, email and your password" });
     return;
   }
 
@@ -44,10 +44,10 @@ router.post("/signup", (req, res, next) => {
   }
 
   // Check the users collection if a user with the same email already exists
-  User.findOne({ email })
-    .then((foundUser) => {
+  Admin.findOne({ email })
+    .then((foundAdmin) => {
       // If the user with the same email already exists, send an error response
-      if (foundUser) {
+      if (foundAdmin) {
         res.status(400).json({ message: "User already exists." });
         return;
       }
@@ -58,18 +58,18 @@ router.post("/signup", (req, res, next) => {
 
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`
-      return User.create({ name, lastName, email, password: hashedPassword, dateOfBirth});
+      return Admin.create({ email, name, email, password: hashedPassword});
     })
-    .then((createdUser) => {
+    .then((createdAdmin) => {
       // Deconstruct the newly created user object to omit the password
       // We should never expose passwords publicly
-      const { name, lastName ,email , dateOfBirth, _id } = createdUser;
+      const { name, email , _id } = createdAdmin;
 
       // Create a new object that doesn't expose the password
-      const user = { name, lastName ,email , dateOfBirth, _id };
+      const admin = { name, email , _id };
 
       // Send a json response containing the user object
-      res.status(201).json({ user: user });
+      res.status(201).json({ admin: admin });
     })
     .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
 });
@@ -85,20 +85,20 @@ router.post("/login", (req, res, next) => {
   }
 
   // Check the users collection if a user with the same email exists
-  User.findOne({ email })
-    .then((foundUser) => {
-      if (!foundUser) {
+  Admin.findOne({ email })
+    .then((foundAdmin) => {
+      if (!foundAdmin) {
         // If the user is not found, send an error response
         res.status(401).json({ message: "User not found." });
         return;
       }
 
       // Compare the provided password with the one saved in the database
-      const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
+      const passwordCorrect = bcrypt.compareSync(password, foundAdmin.password);
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { _id, email, name } = foundUser;
+        const { _id, email, name } = foundAdmin;
 
         // Create an object that will be set as the token payload
         const payload = { _id, email, name };
