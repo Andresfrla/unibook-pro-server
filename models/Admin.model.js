@@ -18,10 +18,10 @@ const adminSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
-    schedule: [{
+    schedule: {
       type: Schema.Types.ObjectId,
       ref: "Reservation"
-    }],
+    },
     users: [{
       type: Schema.Types.ObjectId,
       ref: "User"

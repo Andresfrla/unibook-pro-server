@@ -22,7 +22,7 @@ router.post("/signup", (req, res, next) => {
 
   // Check if email or password or name are provided as empty strings
   if (name === "" || lastName === "" || email === "" || password === "" || dateOfBirth === "") {
-    res.status(400).json({ message: "Provide name, last name, password and your date of birth" });
+    res.status(400).json({ message: "Provide name, last name, password, and your date of birth" });
     return;
   }
 
@@ -55,8 +55,6 @@ router.post("/signup", (req, res, next) => {
       // If email is unique, proceed to hash the password
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(password, salt);
-
-      const dateOfBirth = new Date(dateOfBirth);
 
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`

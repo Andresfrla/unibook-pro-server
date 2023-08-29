@@ -3,9 +3,9 @@ const router = require("express").Router();
 const {
     createReservation,
     getAllReservations,
-    assignReservation,
-    patchRemoveUser,
-    deleteReservation
+    getOneReservation,
+    updateOneReservation,
+    deleteOneReservation
 } = require("../controllers/reservations.controller")
 
 // Verifies that Admin is in DB
@@ -19,17 +19,17 @@ router.get("/user/:userId", getAllReservations)
 
 // Update Reservation from Admin list (Before 24 hours)
 router.put("/:reservationId/admin/:adminId/user/:userId",
-    assignReservation,
+    getOneReservation, 
 )
 
 // Remove reservation from Admin list by user (Only 24 hour before)
 router.patch("/:reservationId/admin/:adminId/user/:userId",
-    patchRemoveUser
+    updateOneReservation
 )
 
 // Delete reservation from Admin reservation list (Only not booked before 24 hour)
 router.delete("/:reservationId/admin/:adminId",
-    deleteReservation
+    deleteOneReservation
 )
 
 module.exports = router

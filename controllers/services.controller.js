@@ -1,14 +1,19 @@
 const mongoose = require('mongoose')
 const Service = require('../models/Service.model')
 
-const getAllServices = (req, res, next) => {
-    res.status(200).json({message: 'Here are all the found projects'})
+const getAllServices = async (req, res, next) => {
+    try {
+        const allServices = await Service.find();
+        res.status(200).json(allServices);
+    } catch (error) {
+        res.status(500).json(error);
+    }
 }
 
 const createService = async (req, res, next) => {
-    const { image, service, description, price } = req.body;
+    const { image, name, description, price, duration } = req.body;
     try {
-        const newService = await Service.create({image, service, description, price})
+        const newService = await Service.create({image, name, description, price, duration})
         res.status(201).json(newService);
     } catch (error) {
         res.status(500).json(error);    
