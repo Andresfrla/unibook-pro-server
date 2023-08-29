@@ -25,7 +25,11 @@ const userSchema = new Schema(
     dateOfBirth: {
       type: Date,
       required: [true, "You date of birth is required."]
-    }
+    },
+    schedule: [{
+      type: Schema.Types.ObjectId,
+      ref: "Reservation"
+    }]
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`

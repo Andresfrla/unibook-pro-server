@@ -6,15 +6,15 @@ const serviceSchema = new Schema (
             type: String,
             require: [true, "The description of the service is require"]
         },
-        service: {
+        name: {
             type :String ,
             require: [true, "The name is required."],
             unique: true
-            },
+        },
         description: {
-                type: String,
-                require: [true, "The description is require." ]
-            },
+            type: String,
+            require: [true, "The description is require." ]
+        },
         price: {
             type: Number,
             require: [true, "The price is require." ]

@@ -22,10 +22,10 @@ const adminSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Reservation"
     }],
-    users: {
+    users: [{
       type: Schema.Types.ObjectId,
       ref: "User"
-    },
+    }],
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`

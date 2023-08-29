@@ -4,7 +4,7 @@ const Admin = require("../models/Admin.model");
 
 const createReservation = async (req ,res ,next) => {
     try {
-        const { userId } = req.params;
+        const { adminId } = req.params;
         const { dayInfo, hour } = req.body;
 
         if (!dayInfo || !hour) {
@@ -76,7 +76,7 @@ const getAllReservations = async (req, res, next) => {
     try {
         const { admin } = req.params;
 
-        const adminInDB = await Admin.findById(adminId)
+        const adminInDB = await Admin.findById(admin)
         .populate({
             path: "schedule",
             populate: {
