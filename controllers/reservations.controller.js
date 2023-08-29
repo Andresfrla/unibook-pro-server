@@ -8,7 +8,7 @@ const createReservation = async (req ,res ,next) => {
         const { dayInfo, hour } = req.body;
 
         if (!dayInfo || !hour) {
-            res.status(400).json({messame: 'The date and the hour are require.'})
+            res.status(400).json({message: 'The date and the hour are require.'})
             return 
         }
 
@@ -64,7 +64,7 @@ const createReservation = async (req ,res ,next) => {
             { new: true }
         )
         .populate("schedule")
-        /* .select("-password") Consultar que significa este paso*/ 
+        .select("-password") 
         res.status(201).json({message: "Reservation created", updateAdmin})
         
     } catch (error) {
@@ -96,7 +96,7 @@ const getAllReservations = async (req, res, next) => {
     }
 }
 
-const assingReservation = async (req, res, next) => {
+const assignReservation = async (req, res, next) => {
     try {
         const { reservationId, userId } = req.params;
 
@@ -121,7 +121,7 @@ const assingReservation = async (req, res, next) => {
 
         const today = new Date(currentDate)
         if(new Date(dateInReservation) < today.setDate(today.getDate() + 1)) {
-            res.status(400).json({messame: "Can not reserve after 24 Hours"})
+            res.status(400).json({message: "Can not reserve after 24 Hours"})
             return
         }
 
@@ -165,7 +165,7 @@ const patchRemoveUser = async (req, res, next) => {
       const today = new Date(currentDate)
       if (new Date(dateInReservation) < today.setDate(today.getDate() + 1)) {
         res.status(400).json({
-          message: "Cannot remove eppointment prior to 24 hours",
+          message: "Cannot remove appointment prior to 24 hours",
         })
         return
       }
@@ -183,7 +183,7 @@ const patchRemoveUser = async (req, res, next) => {
     }
   }
 
-const deleteResevation = async (req, res, next) => {
+const deleteReservation = async (req, res, next) => {
     try {
       const { reservationId, adminId } = req.params
       
@@ -207,7 +207,7 @@ const deleteResevation = async (req, res, next) => {
         adminId,
         { $pull: { schedule: reservationId } },
         { new: true }
-      )/* .select('-password') Revisar */
+      ).select('-password')
   
       res.status(200).json({message: "Reservation deleted", deletedReservation, updatedAdmin})
     } catch (error) {
@@ -218,7 +218,7 @@ const deleteResevation = async (req, res, next) => {
 module.exports = {
     createReservation,
     getAllReservations,
-    assingReservation,
+    assignReservation,
     patchRemoveUser,
-    deleteResevation
+    deleteReservation
 }

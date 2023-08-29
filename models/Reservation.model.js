@@ -11,6 +11,10 @@ const reservationSchema = new Schema (
                 type: Number,
                 require: [true, "Select a hour of your service." ]
             },
+        duration: {
+            type: Number,
+            required: [true, "The duration of the service it is required"]
+        },
         userId: {
             type: Schema.Types.ObjectId,
             ref: "User",

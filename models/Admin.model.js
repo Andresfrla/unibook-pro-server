@@ -18,14 +18,14 @@ const adminSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
-    schedule: {
+    schedule: [{
       type: Schema.Types.ObjectId,
       ref: "Reservation"
-    },
+    }],
     users: {
       type: Schema.Types.ObjectId,
       ref: "User"
-    }
+    },
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
@@ -33,6 +33,6 @@ const adminSchema = new Schema(
   }
 );
 
-const Admin = model("User", adminSchema);
+const Admin = model("Admin", adminSchema);
 
 module.exports = Admin;
