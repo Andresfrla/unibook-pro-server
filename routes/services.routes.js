@@ -12,11 +12,11 @@ const router = Router();
 
 // /api/services
 router.get('/', getAllServices);
-router.post('/', createService, isAdmin)
+router.post('/', createService)
 
 // /api/services/serviceID
 router.get('/:servicesId', getOneService)
-router.put('/:servicesId', updateOneService, isAdmin)
-router.delete('/:servicesId', deleteOneService, isAdmin)
+router.put('/:servicesId', updateOneService)
+router.delete('/:servicesId', deleteOneService)
 
 module.exports = router;

@@ -36,8 +36,8 @@ const getOneService = async (req, res, next) => {
 }
 
 const updateOneService = (req, res, next) => {
-    const { servicesId } = req.params;
-    res.status(200).json({message: `Updating project whit id ${servicesId}`})
+    const { serviceId } = req.params;
+    res.status(200).json({message: `Updating project whit id ${serviceId}`})
 }
 
 const deleteOneService = async (req, res, next) => {
