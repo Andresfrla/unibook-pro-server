@@ -15,8 +15,8 @@ router.get('/', getAllServices);
 router.post('/', createService)
 
 // /api/services/serviceID
-router.get('/:servicesId', getOneService)
-router.put('/:servicesId', updateOneService)
-router.delete('/:servicesId', deleteOneService)
+router.get('/:serviceId', getOneService)
+router.put('/:serviceId', updateOneService)
+router.delete('/:serviceId', deleteOneService)
 
 module.exports = router;

@@ -7,9 +7,9 @@ const calendarSchema = new Schema (
             ref: "User",
             default: null
         },
-        reservations: [{
+        days: [{
             type: Schema.Types.ObjectId,
-            ref: "Reservation"
+            ref: "Day"
         }]
     }
     ,

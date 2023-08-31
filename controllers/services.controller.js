@@ -35,9 +35,31 @@ const getOneService = async (req, res, next) => {
     }
 }
 
-const updateOneService = (req, res, next) => {
+const updateOneService = async (req, res, next) => {
     const { serviceId } = req.params;
-    res.status(200).json({message: `Updating project whit id ${serviceId}`})
+    const { image, name, description, price, duration } = req.body;
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(serviceId)) {
+            res.status(400).json({ message: 'The id sent is not valid' });
+            return;
+        }
+        
+        const updatedService = await Service.findByIdAndUpdate(
+            serviceId,
+            { image, name, description, price, duration },
+            { new: true } 
+        );
+
+        if (!updatedService) {
+            res.status(404).json({ message: `Service with id ${serviceId} not found` });
+            return;
+        }
+
+        res.status(200).json(updatedService);
+    } catch (error) {
+        res.status(500).json(error);
+    }
 }
 
 const deleteOneService = async (req, res, next) => {
