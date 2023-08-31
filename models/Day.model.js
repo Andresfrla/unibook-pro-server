@@ -7,13 +7,12 @@ const daySchema = new Schema (
             required: [true, "Select a date."],
             unique: true
         },
-        hours: {
+        openedHours: {
             type: Number,
             required: [true, "Select a hour of your service." ]
         },
         date: {
             type: Date,
-            required: true
         },
         reservations: [{
             type: Schema.Types.ObjectId, 
