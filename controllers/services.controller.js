@@ -41,6 +41,7 @@ const updateOneService = async (req, res, next) => {
     const { serviceId } = req.params;
     const updatedData = req.body; // Datos actualizados del servicio
 
+
     try {
         if (!mongoose.Types.ObjectId.isValid(serviceId)) {
             res.status(400).json({ message: 'The id sent is not valid' });
@@ -64,6 +65,7 @@ const updateOneService = async (req, res, next) => {
         res.status(500).json(error);
     }
 };
+
 
 
 const deleteOneService = async (req, res, next) => {
