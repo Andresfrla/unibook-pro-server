@@ -12,22 +12,24 @@ const getAllServices = async (req, res, next) => {
 
 const createService = async (req, res, next) => {
     const { image, name, description, price, duration } = req.body;
+
     try {
-        const newService = await Service.create({image, name, description, price, duration})
+        const newService = await Service.create({ image, name, description, price, duration });
         res.status(201).json(newService);
     } catch (error) {
-        res.status(500).json(error);    
+        console.error("Error al crear el servicio:", error);
+        res.status(500).json(error);
     }
 }
 
 const getOneService = async (req, res, next) => {
-    const { servicesId } = req.params;
+    const { serviceId } = req.params;
     try {
-        if(!mongoose.Types.ObjectId.isValid(servicesId)) {
+        if(!mongoose.Types.ObjectId.isValid(serviceId)) {
             res.status(400).json({message: 'The id send is not valid'})
             return
         }
-        const service = await Service.findById(servicesId)
+        const service = await Service.findById(serviceId)
 
         res.status(200).json(service)
     } catch (error) {
@@ -35,20 +37,44 @@ const getOneService = async (req, res, next) => {
     }
 }
 
-const updateOneService = (req, res, next) => {
+const updateOneService = async (req, res, next) => {
     const { serviceId } = req.params;
-    res.status(200).json({message: `Updating project whit id ${serviceId}`})
-}
+    const updatedData = req.body; // Datos actualizados del servicio
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(serviceId)) {
+            res.status(400).json({ message: 'The id sent is not valid' });
+            return;
+        }
+
+        // Actualiza el servicio
+        const updatedService = await Service.findByIdAndUpdate(
+            serviceId,
+            updatedData,
+            { new: true } // Devuelve el servicio actualizado
+        );
+
+        if (!updatedService) {
+            res.status(404).json({ message: 'Service not found' });
+            return;
+        }
+
+        res.status(200).json(updatedService);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+};
+
 
 const deleteOneService = async (req, res, next) => {
-    const { servicesId } = req.params;
+    const { serviceId } = req.params;
     try {
-        if(!mongoose.Types.ObjectId.isValid(servicesId)) {
+        if(!mongoose.Types.ObjectId.isValid(serviceId)) {
             res.status(400).json({message: 'The id send is not valid'})
             return
         }
-        const service = await Service.findByIdAndRemove(servicesId)
-        res.status(200).json({message: `The service with id ${servicesId} was removed`})
+        const service = await Service.findByIdAndRemove(serviceId)
+        res.status(200).json({message: `The service with id ${serviceId} was removed`})
     } catch (error) {
         res.status(500).json(error);    
     }

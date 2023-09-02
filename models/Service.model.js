@@ -21,7 +21,7 @@ const serviceSchema = new Schema (
         },
         duration: {
             type: Number,
-            required: [true, "The duration of the service is require."]
+            required: [true, "The duration of the service is required."]
         }
     },
     {
