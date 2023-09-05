@@ -12,11 +12,12 @@ const express = require("express");
 const app = express();
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', "https://tired-robe-lamb.cyclic.cloud"); // Cambia esto con tu dominio en producción
+    res.header('Access-Control-Allow-Origin', "http://localhost:3000");
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
+
 
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require("./config")(app);

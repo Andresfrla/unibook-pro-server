@@ -17,6 +17,7 @@ const adminSchema = new Schema(
     name: {
       type: String,
       required: [true, "Name is required."],
+      trim: true
     },
     users: [{
       type: Schema.Types.ObjectId,
