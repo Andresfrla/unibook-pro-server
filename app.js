@@ -18,6 +18,7 @@ app.use((req, res, next) => {
     next();
 });
 
+
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require("./config")(app);
 

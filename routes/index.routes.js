@@ -8,8 +8,7 @@ router.get("/", (req, res, next) => {
   res.status(200).json({ message: "Welcome to unibook pro API"});
 });
 
-router.use('/servicios', servicesRouter);
+router.use('/servicios', servicesRouter)
 router.use('/reservar-ahora', reservationsRouter);
-router.use('/calendario', calendarRouter);
 
 module.exports = router;
