@@ -1,32 +1,39 @@
 const mongoose = require('mongoose');
 const Calendar = require('../models/Calendar.model');
 const Day = require('../models/Day.model');
+const dayjs = require('dayjs')
 
 const createOrUpdateCalendar = async (req,res,next) => {
     try{
         const { reservations } = req.body;
         // 1. Si el admin ya tiene un calendario, lo tomamos
         // para actualizarlo.
-        const { userId: adminId } = req.payload  
+        const { _id: adminId } = req.payload  
+        
         const calendar = await Calendar.findOne({adminId})
         .populate({
             path: "days"
         })
 
-        const previousDays = calendar.days
+        const previousDays = calendar ? calendar.days : null;
         let calendarId = calendar && calendar._id
-        
+
         if(!calendarId){
             const newCalendar = await Calendar.create({adminId})
-            calendarId = newCalendar._id;
+            calendarId = newCalendar._id;    
         } 
         
         // 2. Ahora vamos a guardar los Id de los dias
         // seleccionados en el body
         const days = []
-        for (const day of Object.keys(req.body)) {
+        const { availableHours } = req.body
+
+        for (const day of availableHours) {
             const reservations = previousDays.filter(previousDay => previousDay === day)
             .flatMap(day => day.reservations)
+    
+            const formatedDate = day.splice()
+            console.log(formatedDate)
 
             const calendarDay = await Day.create({
                 name: day,
@@ -48,7 +55,7 @@ const createOrUpdateCalendar = async (req,res,next) => {
         Calendar.create({adminId, reservations})
     }
     catch {
-        res.status(500).json()
+        res.status(500).json({message: "Problem creating the calendar"})
     }
 }
 
