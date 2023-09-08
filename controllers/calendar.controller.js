@@ -43,7 +43,6 @@ const createOrUpdateCalendar = async (req, res, next) => {
         Calendar.create({ adminId, reservations });
         res.status(200).json({ message: 'Calendar updated successfully' });
     } catch (error) {
-        console.log(error)
         res.status(500).json({ message: 'Problem creating/updating the calendar', error });
     }
 };
@@ -62,14 +61,13 @@ const getCalendarByAdmin = async (req, res, next) => {
                model: 'Reservation'
            } */
        })
-       console.log("calendar: ", calendar)
+       
         if (!calendar) {
             return res.status(404).json({ message: 'Calendar not found for this admin.' });
         }
         
         res.status(200).json(calendar);
     } catch (error) {
-        console.log("error: ", error)
         res.status(500).json({ message: 'Error while fetching calendar.', error });
     }
 }
