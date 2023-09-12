@@ -7,10 +7,10 @@ const daySchema = new Schema(
             type: String,
             required: [true, "Select a date."],
         },
-        openedHours: {
+        openedHours: [{
             type: Number,
             required: [true, "Select an hour for your service."],
-        },
+        }],
         date: {
             type: Date,
         },

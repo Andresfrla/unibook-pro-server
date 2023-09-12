@@ -2,7 +2,8 @@ const router = require("express").Router();
 
 const {
     createOrUpdateCalendar,
-    getCalendarByAdmin
+    getCalendarByAdmin,
+    deleteDayAndHour
 } = require("../controllers/calendar.controller");
 
 
@@ -14,6 +15,11 @@ router.post("/:adminId",
 //Get a calendar from every Admin
 router.get("/:adminId",
     getCalendarByAdmin
+);
+
+// Delete one hour and day
+router.delete("/:adminId/borrar/:dayId",
+    deleteDayAndHour   
 );
 
 module.exports = router;
