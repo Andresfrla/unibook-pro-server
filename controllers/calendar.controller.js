@@ -1,7 +1,5 @@
-const mongoose = require('mongoose');
 const Calendar = require('../models/Calendar.model');
 const Day = require('../models/Day.model');
-const dayjs = require('dayjs')
 
 const createOrUpdateCalendar = async (req, res, next) => {
     try {
@@ -16,7 +14,7 @@ const createOrUpdateCalendar = async (req, res, next) => {
         
         let calendar = await Calendar.findOne({ adminId })
         .populate({
-            path: 'days'
+            path: 'days',
         });
 
         console.log("Paso 3: Buscando el calendario para el adminId:", adminId);
@@ -33,7 +31,7 @@ const createOrUpdateCalendar = async (req, res, next) => {
 
         const previousDays = calendar && calendar.days || [];
 
-        const days = [];
+        const days = previousDays.map(d => d._id);
         const { availableHours } = req.body;
         console.log("🚀 ~ file: calendar.controller.js:38 ~ createOrUpdateCalendar ~ availableHours:", availableHours)
         const daysObject = []
@@ -51,43 +49,49 @@ const createOrUpdateCalendar = async (req, res, next) => {
             }
         }
 
-        console.log("openHoursPerDay: ", openHoursPerDay)
-
+        
         for (const day of Object.keys(openHoursPerDay)) {
-            const reservations = previousDays.find((prevDay) => prevDay.name === day)?.reservations || [] 
+            
+            let calendarDay = await Day.findOne({ name: day }).populate('reservations')
+            
+            let dayId = calendarDay && calendarDay._id
+            
+            console.log("calendarDay: ", calendarDay)
 
-            const calendarDay = await Day.create({
-                name: day,
-                openedHours: openHoursPerDay[day],
-                date: new Date(day),
-                reservations,
-            });
-            daysObject.push(calendarDay)
-            days.push(calendarDay._id);
-        }
-
-/*         for (const prevDay of previousDays) {
-            for (const calendarDay of daysObject) {
-                const oldDate = `${calendarDay._id}`
-                
-                if(`${calendarDay.name}-${calendarDay.openedHours}` !== `${prevDay.name}-${prevDay.openedHours}`){
-                    const calendarDayCopy = `${calendarDay.name}-${calendarDay.openedHours}`
-                    const PrevDayCopy = `${prevDay.name}-${prevDay.openedHours}`
-
-                    console.log("Paso 5: Creando días y horas.");
-                    console.log("Detalles del día y hora creado:", calendarDayCopy);
-                    console.log("Detalles del día y hora previo:", PrevDayCopy);
-
-                    days.push(prevDay._id)
+            if (!dayId) { 
+                calendarDay = await Day.create({
+                    name: day,
+                    openedHours: openHoursPerDay[day],
+                    date: new Date(day),
+                });
+                dayId = calendarDay && calendarDay._id
+            } else {
+                const reservations = previousDays.find((prevDay) => prevDay.name === day)?.reservations || [] 
+                console.log('recovered reservations: ', reservations);
+                const hours = calendarDay.openedHours
+                .filter(h => !openHoursPerDay[day].includes(h))
+                .concat(openHoursPerDay[day].filter(h => !calendarDay.openedHours.includes(h)));  
+                const updatedDay = await Day.findByIdAndUpdate(
+                    dayId,
+                    { openedHours: hours, reservations },
+                    { new: true }
+                )
+                if(updatedDay.openedHours.length === 0) {
+                    await Day.findByIdAndDelete(dayId)
                 }
             }
-        }  */
+            daysObject.push(calendarDay)
+            days.push(dayId);
+        }
+
 
         const updatedCalendar = await Calendar.findByIdAndUpdate(
             calendarId, // buscamos el calendario asociado al user
             { $set: { days } }, // y le agregamos los dias creados
             { new: true }, 
         )
+
+        console.log('updatedCalendar: ', updatedCalendar);
         
         console.log("Paso 6: Actualizando los días en el calendario.");
         console.log("Días actualizados:", days);
@@ -107,7 +111,7 @@ const getCalendarByAdmin = async (req, res, next) => {
     
     try {
         const calendar = await Calendar.findOne({ adminId })
-        .populate('adminId')
+        // .populate('adminId')
         .populate({
             path: 'days', 
 /*             populate: { 
@@ -117,10 +121,10 @@ const getCalendarByAdmin = async (req, res, next) => {
        })
        
         if (!calendar) {
-            return res.status(404).json({ message: 'Calendar not found for this admin.' });
+            return res.status(200).json({ message: 'Calendar not found for this admin.', hasCalendar: false });
         }
         
-        res.status(200).json(calendar);
+        res.status(200).json({calendar,  hasCalendar: true});
     } catch (error) {
         res.status(500).json({ message: 'Error while fetching calendar.', error });
     }
