@@ -24,10 +24,7 @@ module.exports = (app) => {
   // controls a very specific header to pass headers from the frontend
   app.use(
     cors({
-      origin: [FRONTEND_URL], // added comma
-      credentials: true, // allow credentials
-      methods: 'GET, POST, PUT, PATCH, DELETE', // allowed methods
-      allowedHeaders: 'Content-Type, Authorization' // allowed headers
+      origin: ['https://unibookpro-app.netlify.app/'], // added comma
     })
   );
 
