@@ -5,9 +5,11 @@ const reservationsRouter = require('./reservations.routes')
 const calendarRouter = require('./calendar.routes.js')
 const { isAuthenticated } = require("../middleware/jwt.middleware"); 
 const { isAdmin } = require("../middleware/isAdmin.middleware");
+const cors = require('cors')
+
+router.use(cors)
 
 router.get("/", (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
   res.status(200).json({ message: "Welcome to unibook pro API"});
 });
 
