@@ -1,29 +1,30 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require('mongoose');
+const { Schema, model } = mongoose;
 
-const daySchema = new Schema (
+const daySchema = new Schema(
     {
         name: {
-            type :String ,
+            type: String,
             required: [true, "Select a date."],
-            unique: true
         },
-        openedHours: {
+        openedHours: [{
             type: Number,
-            required: [true, "Select a hour of your service." ]
-        },
+            required: [true, "Select an hour for your service."],
+        }],
         date: {
             type: Date,
         },
-        reservations: [{
-            type: Schema.Types.ObjectId, 
-            ref:"Reservation"
-        }]
+        reservations: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Reservation",
+            },
+        ],
+    },
+    {
+        timestamps: true,
     }
-    ,
-        {
-            timestamps: true ,
-        }
-)
+);
 
 const Day = model("Day", daySchema);
 
