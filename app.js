@@ -9,14 +9,15 @@ require("./db");
 // https://www.npmjs.com/package/express
 const express = require("express");
 
+const cors = require('cors');
+
 const app = express();
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', "https://main--unibookpro-app.netlify.app"); // Cambia esto con tu dominio en producción
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
+app.use(cors({
+    origin: 'https://main--unibookpro-app.netlify.app', // Ajusta esto a tu URL de frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
