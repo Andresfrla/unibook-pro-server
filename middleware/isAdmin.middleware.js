@@ -1,13 +1,14 @@
-const Admin = require("../models/Admin.model")
+const User = require("../models/User.model");
 
 exports.isAdmin = async (req, res, next) => {
-    const { _id: adminId } = req.payload;
+    const { _id: userId } = req.payload;
 
-    const adminInDB = await Admin.findById(adminId)
+    const userInDB = await User.findById(userId);
 
-    if(!adminInDB){
-        res.status(403).json({message: `Forbidden access you don't have access`})
-        return
+    if (!userInDB || userInDB.role !== 'admin') {
+        res.status(403).json({message: "Forbidden access: you don't have access"});
+        return;
     }
+
     next();
-}
+};

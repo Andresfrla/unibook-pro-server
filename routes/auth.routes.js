@@ -18,6 +18,6 @@ router.post("/signup", signupController);
 router.post("/login", loginController);
 
 // GET  /auth/verify  -  Used to verify JWT stored on the client
-router.get("/verify", verifyController);
+router.get("/verify", isAuthenticated ,verifyController);
 
 module.exports = router;

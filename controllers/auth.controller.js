@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const signupController = async (req, res, next) => {
-  const { name, lastName, email, password, dateOfBirth } = req.body;
+  const { name, lastName, email, password, dateOfBirth, role } = req.body;
 
   // Check if email or password or name are provided as empty strings
   if (name === "" || lastName === "" || email === "" || password === "" || dateOfBirth === "") {
@@ -43,21 +43,23 @@ const signupController = async (req, res, next) => {
         return;
       }
 
+      saltRounds = 10;
+
       // If email is unique, proceed to hash the password
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`
-      return User.create({ name, lastName, email, password: hashedPassword, dateOfBirth});
+      return User.create({ name, lastName, email, password: hashedPassword, dateOfBirth, role});
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
       // We should never expose passwords publicly
-      const { name, lastName ,email , dateOfBirth, _id } = createdUser;
+      const { name, lastName ,email , dateOfBirth, role, _id } = createdUser;
 
       // Create a new object that doesn't expose the password
-      const user = { name, lastName ,email , dateOfBirth, _id };
+      const user = { name, lastName ,email , dateOfBirth, role, _id };
 
       // Send a json response containing the user object
       res.status(201).json({ user: user });
@@ -92,10 +94,10 @@ const loginController = async (req, res, next) => {
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { _id, email, name } = foundUser;
+        const { _id, email, name, role } = foundUser;
 
         // Create an object that will be set as the token payload
-        const payload = { _id, email, name };
+        const payload = { _id, email, name, role };
 
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {

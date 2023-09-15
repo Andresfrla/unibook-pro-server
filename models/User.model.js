@@ -28,10 +28,15 @@ const userSchema = new Schema(
       type: Date,
       required: [true, "You date of birth is required."]
     },
+    role: {
+      type: String,
+      enum: ["admin", "client"],
+      default: 'client'
+    },
     schedule: [{
       type: Schema.Types.ObjectId,
       ref: "Reservation"
-    }]
+    }],
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
