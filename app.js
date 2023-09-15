@@ -16,8 +16,11 @@ const app = express();
 app.use(cors({
     origin: 'https://main--unibookpro-app.netlify.app', // Ajusta esto a tu URL de frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+
 }));
+
+app.options('*', cors());
 
 
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
