@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const signupController = async (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
   const { name, lastName, email, password, dateOfBirth, role } = req.body;
 
   // Check if email or password or name are provided as empty strings
@@ -72,6 +73,7 @@ const signupController = async (req, res, next) => {
 }
 
 const loginController = async (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
       const { email, password } = req.body;
 
   // Check if email or password are provided as empty string
@@ -118,6 +120,7 @@ const verifyController = async (req, res, next) => {
       // If JWT token is valid the payload gets decoded by the
   // isAuthenticated middleware and is made available on `req.payload`
   console.log(`req.payload`, req.payload);
+  res.header('Access-Control-Allow-Origin', '*')
 
   // Send back the token payload object containing the user data
   res.status(200).json(req.payload);
