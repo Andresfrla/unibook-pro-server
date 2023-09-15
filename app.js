@@ -14,10 +14,12 @@ const cors = require('cors');
 const app = express();
 
 app.use(cors({
-    origin: 'https://main--unibookpro-app.netlify.app', // Ajusta esto a tu URL de frontend
+    origin: 'https://main--unibookpro-app.netlify.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-
+    credentials: true, // si necesitas enviar cookies o credenciales
+    preflightContinue: true,
+    optionsSuccessStatus: 204  // algunos navegadores más antiguos (IE11, varios SmartTVs) bloquean con 204
 }));
 
 app.options('*', cors());
